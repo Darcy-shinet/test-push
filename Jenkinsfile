@@ -15,25 +15,24 @@ pipeline {
     agent any
 
     environment {
-			  def server = ''
+        def server = ''
         def path = '/var/www/ott-develop'
         def branch = 'develop'
         def port = 3000			
     }
 
     stages {
-
         stage('deploy develop') {
             when {
                 branch 'develop'
             }
-						steps{
-							script{
-								server = getHost()
-							}
-						}
+            steps {
+                script {
+                    server = getHost()
+                }
+            }
 
-						steps{
+            steps{
                 script {
                     sshCommand remote: server, command: """
                     cd ${path} && git checkout ${branch} && git pull
@@ -41,7 +40,7 @@ pipeline {
                 }
             }
 
-						steps{
+            steps {
                 script {
                     sshCommand remote: server, command: """
                     cd ${path} && npm install
@@ -49,7 +48,7 @@ pipeline {
                 }
             }
 
-						steps{
+            steps {
                 script {
                     sshCommand remote: server, command: """
                     cd ${path} && pm2 reload keystone.js && sleep 15
@@ -57,7 +56,7 @@ pipeline {
                 }
             }
 
-						steps{
+            steps {
                 script {
                     sshCommand remote: server, command: """
                     if netstat -nelt | grep -q ${port}; then echo "success"; else exit 1; fi
@@ -71,7 +70,7 @@ pipeline {
                 branch 'master'
             }
             steps {
-							echo "master"
+                echo "master"
             }
         }
     }
