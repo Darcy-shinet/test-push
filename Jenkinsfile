@@ -1,12 +1,17 @@
 #!groovy
 
-def getHost(){
+def getHost(name, host, user, port, file){
     def remote = [:]
-    remote.name = 'ott-beta'
-    remote.host = '35.243.153.80'
-    remote.user = 'shinetechsoftwarechina_gmail_com'
-    remote.port = 22
-    remote.identityFile = '/var/lib/jenkins/.ssh/id_rsa'
+    // remote.name = 'ott-beta'
+    // remote.host = '35.243.153.80'
+    // remote.user = 'shinetechsoftwarechina_gmail_com'
+    // remote.port = 22
+    // remote.identityFile = '/var/lib/jenkins/.ssh/id_rsa'
+    remote.name = name
+    remote.host = host
+    remote.user = user
+    remote.port = port
+    remote.identityFile = file
     remote.allowAnyHosts = true
     return remote
 }
@@ -18,7 +23,7 @@ pipeline {
         def server = ''
         def path = '/var/www/ott-develop'
         def branch = 'develop'
-        def port = 3000			
+        def port = 3000
     }
 
     stages {
@@ -28,7 +33,12 @@ pipeline {
             }
             steps {
                 script {
-                    server = getHost()
+                    def name = 'ott-beta'
+                    def host = '35.243.153.80'
+                    def user = 'shinetechsoftwarechina_gmail_com'
+                    def port = 22
+                    def file = '/var/lib/jenkins/.ssh/id_rsa'
+                    server = getHost(name, host, user, port, file)
                 }
                 script {
                     sshCommand remote: server, command: """
